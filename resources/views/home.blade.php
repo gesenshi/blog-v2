@@ -1,5 +1,7 @@
 @extends('default-layout')
 
+@section('page-title', 'Главная')
+
 @section('content')
     <div class="w-full">
 

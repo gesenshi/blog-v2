@@ -1,6 +1,6 @@
 <html class="h-full">
 @vite('resources/css/app.css')
-
+<title>Регистрация</title>
 <body class="dark:bg-slate-900 bg-gray-100 flex h-full items-center py-16">
     <main class="w-full max-w-md mx-auto p-6">
         <div class="mt-7 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
@@ -34,10 +34,6 @@
                         </svg>
                         Cоздать аккаунт через Google
                     </button> --}}
-
-                    <div
-                        class="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:mr-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ml-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">
-                        Or</div>
 
                     <!-- Form -->
                     <form method="POST" action="{{ route('register') }}">
@@ -109,8 +105,7 @@
                                 </div>
                             </div>
                             @foreach ($errors->all() as $error)
-                                <div
-                                    class="flex w-full overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+                                <div class="flex w-full overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
                                     <div class="flex items-center justify-center w-12 bg-red-500">
                                         <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40"
                                             xmlns="http://www.w3.org/2000/svg">

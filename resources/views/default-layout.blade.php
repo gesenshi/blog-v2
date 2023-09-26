@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite('resources/css/app.css')
-    <title>Document</title>
+    <title> @yield('page-title')</title>
 </head>
 
 <body class="bg-gray-50 dark:bg-slate-900">
@@ -14,9 +14,9 @@
         class="flex flex-wrap sm:justify-start sm:flex-nowrap z-1000 w-full bg-white border-b text-sm py-2.5 sm:py-4 dark:bg-slate-900 dark:border-gray-700">
         <nav class="max-w-7xl flex basis-full items-center w-full mx-auto px-4 sm:px-6 lg:px-8" aria-label="Global">
             <div class="mr-5 md:mr-8">
-                <a class="flex-none text-xl font-semibold dark:text-white" href="#" aria-label="Brand">Блог</a>
+                <a class="flex-none text-xl font-semibold dark:text-white" href="{{ route('home') }}"
+                    aria-label="Brand">Блог</a>
             </div>
-
             <div class="w-full flex items-center justify-end ml-auto sm:justify-between  gap-6 sm:order-3">
                 <div class="sm:hidden">
                     <button type="button"
@@ -41,7 +41,7 @@
                         </div>
                         <input type="text" id="icon" name="icon"
                             class="py-2 px-4 pl-11 block w-full border-gray-200 shadow-sm rounded-md text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
-                            placeholder="Search">
+                            placeholder="Поиск">
                     </div>
                 </div>
 
@@ -51,18 +51,27 @@
                         <button id="hs-dropdown-with-header" type="button"
                             class="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center gap-2 h-[2.375rem] w-[2.375rem] rounded-full font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-xs dark:bg-gray-800 dark:hover:bg-slate-800 dark:text-gray-400 dark:hover:text-white dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800">
                             <img class="inline-block h-[2.375rem] w-[2.375rem] rounded-full ring-2 ring-white dark:ring-gray-800"
-                                src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
-                                alt="Image Description">
+                                src="{{ asset(auth()->user()->avatar ?: 'avatars/default.jpg') }}"
+                                alt="{{ auth()->user()->firstname }} {{ auth()->user()->lastname }}">
                         </button>
-
 
                         <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-[15rem] z-10 bg-white shadow-md rounded-lg p-2 dark:bg-gray-800 dark:border dark:border-gray-700"
                             aria-labelledby="hs-dropdown-with-header">
                             <div class="py-3 px-5 -m-2 bg-gray-100 rounded-t-lg dark:bg-gray-700">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Вы вошли как: </p>
-                                <p class="text-sm font-medium text-gray-800 dark:text-gray-300">james@site.com</p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-gray-300">
+                                    {{ auth()->user()->email }}</p>
                             </div>
                             <div class="mt-2 py-2 first:pt-0 last:pb-0">
+                                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                                    href="{{ route('profile') }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                                    </svg>
+                                    Профиль
+                                </a>
                                 <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
                                     href="#">
                                     <svg class="flex-none" width="16" height="16" viewBox="0 0 16 16"
@@ -73,7 +82,16 @@
                                     Уведомления
                                 </a>
                                 <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-                                    href="#">
+                                    href="{{ route('edit-profile') }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                                    </svg>
+                                    Редактировать профиль
+                                </a>
+                                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                                    href="{{ route('logout') }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="bi bi-door-closed" viewBox="0 0 16 16">
                                         <path
@@ -82,8 +100,6 @@
                                     </svg>
                                     Выйти
                                 </a>
-
-
                             </div>
                         </div>
                     </div>
@@ -102,19 +118,23 @@
                 class="max-w-7xl snap-x w-full flex items-center overflow-x-auto scrollbar-x px-4 sm:px-6 lg:px-8 pb-4 md:pb-0 mx-auto dark:scrollbar-x">
                 <div class="snap-center shrink-0 pr-5 sm:pr-8 sm:last-pr-0">
                     <a class="inline-flex items-center gap-x-2 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-500"
+                        href="{{ route('home') }}">Лента</a>
+                </div>
+                <div class="snap-center shrink-0 pr-5 sm:pr-8 sm:last:pr-0">
+                    <a class="inline-flex items-center gap-x-2 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-500"
+                        href="{{route('profile')}}">
+                        Профиль
+                        <span
+                            class="inline bg-gray-100 text-xs text-gray-500 font-semibold rounded-full py-1 px-2 dark:bg-gray-700 dark:text-gray-400">v12.7</span>
+                    </a>
+                </div>
+                <div class="snap-center shrink-0 pr-5 sm:pr-8 sm:last-pr-0">
+                    <a class="inline-flex items-center gap-x-2 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-500"
                         href="#">Мои посты</a>
                 </div>
                 <div class="snap-center shrink-0 pr-5 sm:pr-8 sm:last:pr-0">
                     <a class="inline-flex items-center gap-x-2 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-500"
                         href="#">Опубликовать пост</a>
-                </div>
-                <div class="snap-center shrink-0 pr-5 sm:pr-8 sm:last:pr-0">
-                    <a class="inline-flex items-center gap-x-2 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-500"
-                        href="#">
-                        Профиль
-                        <span
-                            class="inline bg-gray-100 text-xs text-gray-500 font-semibold rounded-full py-1 px-2 dark:bg-gray-700 dark:text-gray-400">v12.7</span>
-                    </a>
                 </div>
             </div>
         </nav>

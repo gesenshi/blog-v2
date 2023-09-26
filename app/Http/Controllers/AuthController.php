@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +20,8 @@ class AuthController extends Controller
         }
 
         $request->validate([
-            'firstname' => 'required|string',
-            'lastname' => 'required|string',
+            'firstname' => 'required|string|regex:/^[a-zA-Zа-яА-ЯёЁ\s]+$/u',
+            'lastname' => 'required|string|regex:/^[a-zA-Zа-яА-ЯёЁ\s]+$/u',
             'email' => 'required|email|unique:users',
             'password' => ['required', 'string', 'min:8', new SecurePassword],
         ]);
@@ -34,6 +35,8 @@ class AuthController extends Controller
         ]);
 
         $user->save();
+
+        event(new Registered($user));
 
         Auth::login($user);
 
