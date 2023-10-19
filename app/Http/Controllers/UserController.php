@@ -6,11 +6,22 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Post;
 
 class UserController extends Controller
 {
+
+    public function settingsView()
+    {
+        $posts = Post::all();
+
+        return view('user/settings', compact('posts'));
+    }
+
+
     public function updateProfile(Request $request)
     {
         $request->validate([
@@ -36,7 +47,6 @@ class UserController extends Controller
                     unlink($oldAvatarPath);
                 }
             }
-
             $avatar = $request->file('avatar');
             $avatarName = time() . '.' . $avatar->getClientOriginalExtension();
             $avatar->move(public_path('avatars'), $avatarName);
@@ -50,12 +60,12 @@ class UserController extends Controller
             if (Hash::check($request->input('currentPassword'), $user->password)) {
                 $user->password = Hash::make($newPassword);
             } else {
-                return redirect()->route('edit-profile')->withErrors('Текущий пароль неверен');
+                return redirect()->route('settings')->withErrors('Текущий пароль неверен');
             }
         }
 
         $user->save();
 
-        return redirect()->route('edit-profile')->with('success', 'Профиль успешно обновлен');
+        return redirect()->route('settings')->with('success', 'Профиль успешно обновлен');
     }
 }

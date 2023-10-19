@@ -1,4 +1,3 @@
-
 <html class="h-full">
 @vite('resources/css/app.css')
 <title>Авторизация</title>
@@ -104,7 +103,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             @endforeach
                             <button type="submit"

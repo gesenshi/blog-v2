@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('home');
+    }
     return view('auth/login');
 })->name('/');
 
@@ -62,11 +65,44 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 
 
-Route::view('/home', 'home')->middleware(['auth', 'verified'])->name('home');
-Route::view('/profile', 'user/profile')->middleware(['auth', 'verified'])->name('profile');
-Route::view('/edit-profile', 'user/edit-profile')->middleware(['auth', 'verified'])->name('edit-profile');
+Route::get('/home', [\App\Http\Controllers\HomeController::class, 'homeView'])->middleware(['auth', 'verified'])->name('home');
+
+Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'ProfileView'])
+    ->middleware(['auth', 'verified'])
+    ->name('user.profile'); // Уникальное имя для просмотра собственного профиля
+
+Route::get('/profile/{id}', [\App\Http\Controllers\ProfileController::class, 'publicProfileView'])
+    ->name('public.profile'); // Уникальное имя для просмотра публичных профилей
+
+/* Route::get('/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('users.search'); */
+Route::get('/search/query', [\App\Http\Controllers\SearchController::class, 'query'])->name('search');
+
+// Маршруты для подписок
+Route::post('/subscribe/{user}', [\App\Http\Controllers\SubscribeController::class, 'subscribe'])->name('subscribe');
+Route::post('/unsubscribe/{user}', [\App\Http\Controllers\SubscribeController::class, 'unsubscribe'])->name('unsubscribe');
+
+// Маршруты для поиска
+Route::get('/search', [\App\Http\Controllers\SearchController::class, 'searchView'])->name('search');
+
+Route::post('/search-result', [\App\Http\Controllers\SearchController::class, 'search'])->name('search-result');
+
+
+
+Route::get('/settings', [\App\Http\Controllers\UserController::class, 'settingsView'])->middleware(['auth', 'verified'])->name('settings');
+
 Route::post('/update-profile', [\App\Http\Controllers\UserController::class, 'updateProfile'])->name('update-profile');
 
+Route::get('/create-post', [\App\Http\Controllers\PostController::class, 'create'])
+    ->middleware(['auth', 'verified'])
+    ->name('create-post');
+
+
+Route::get('/post/{id}', [\App\Http\Controllers\PostController::class, 'postView'])
+    ->middleware(['auth', 'verified'])
+    ->name('post');
+
+
+Route::post('/add-post', [\App\Http\Controllers\PostController::class, 'addPost'])->middleware(['auth', 'verified'])->name('add-post');
 
 Route::get('/logout', function () {
     Auth::logout();

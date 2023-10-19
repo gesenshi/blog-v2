@@ -26,6 +26,25 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
     ];
 
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'user_id');
+    }
+
+    // В модели User
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'subscriptions', 'target_user_id', 'user_id');
+    }
+
+
+    // В модели User
+    public function followings()
+    {
+        return $this->belongsToMany(User::class, 'subscriptions', 'user_id', 'target_user_id');
+    }
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

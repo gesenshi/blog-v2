@@ -4,67 +4,45 @@
 
 @section('content')
     <div class="w-full">
-
-        <!-- Card Blog -->
         <div class="max-w-[80rem] sm:px-6 lg:px-8 lg:py-0 mx-auto">
-            <div class="my-10">
-                <h1 class="block text-2xl font-bold text-gray-800 sm:text-3xl dark:text-white">Рекомендуем вам</h1>
-            </div>
+            @if (count($subscribedUsers) > 0)
+                <div class="my-4">
+                    <span class="block text-xl font-bold text-gray-800 dark:text-white">Ваши подписки:</span>
+                </div>
+                <div class="flex -space-x-2 my-2 mb-4">
+                    @foreach ($subscribedUsers as $user)
+                        <div class="hs-tooltip inline-block">
+                            <a href="{{ route('public.profile', ['id' => $user->id]) }}">
+                                <button type="button"
+                                    class="hs-tooltip-toggle inline-flex justify-center items-center gap-2 rounded-full bg-gray-50 border border-gray-200 text-gray-600 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[.05] dark:hover:border-white/[.1] dark:hover:text-white">
+                                    <img class="inline-block h-[3.875rem] w-[3.875rem] rounded-full ring-2 ring-white"
+                                        src="{{ asset($user->avatar ?: 'avatars/default.jpg') }}"
+                                        alt="{{ $user->firstname }} {{ $user->lastname }}" style="object-fit: cover;">
 
-            <!-- Grid -->
-            <div class="grid lg:grid-cols-2 gap-6">
-                <!-- Card -->
-                <a class="group relative block" href="#">
-                    <div
-                        class="flex-shrink-0 relative w-full rounded-xl overflow-hidden w-full h-[350px] before:absolute before:inset-x-0 before:w-full before:h-full before:bg-gradient-to-t before:from-gray-900/[.7] before:z-[1]">
-                        <img class="w-full h-full absolute top-0 left-0 object-cover"
-                            src="https://images.unsplash.com/photo-1669828230990-9b8583a877ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1062&q=80"
-                            alt="Image Description">
-                    </div>
-
-                    <div class="absolute top-0 inset-x-0">
-                        <div class="p-4 flex flex-col h-full sm:p-6">
-                            <!-- Avatar -->
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <img class="h-[2.875rem] w-[2.875rem] border-2 border-white rounded-full"
-                                        src="https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
-                                        alt="Image Description">
-                                </div>
-                                <div class="ml-2.5 sm:ml-4">
-                                    <h4 class="font-semibold text-white">
-                                        Gloria
-                                    </h4>
-                                    <p class="text-xs text-white/[.8]">
-                                        Jan 09, 2021
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- End Avatar -->
+                                    <span
+                                        class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded-md shadow-sm dark:bg-slate-700"
+                                        role="tooltip">
+                                        {{ $user->firstname }} {{ $user->lastname }}
+                                    </span>
+                                </button>
+                            </a>
                         </div>
-                    </div>
+                    @endforeach
+            @endif
+        </div>
 
-                    <div class="absolute bottom-0 inset-x-0 z-10">
-                        <div class="flex flex-col h-full p-4 sm:p-6">
-                            <h3 class="text-lg sm:text-3xl font-semibold text-white group-hover:text-white/[.8]">
-                                Facebook is creating a news section in Watch to feature breaking news
-                            </h3>
-                            <p class="mt-2 text-white/[.8]">
-                                Facebook launched the Watch platform in August
-                            </p>
-                        </div>
-                    </div>
-                </a>
-                <!-- End Card -->
-
+        <div class="grid lg:grid-cols-2 gap-6">
+            @foreach ($posts as $post)
                 <!-- Card -->
-                <a class="group relative block" href="#">
-                    <div
-                        class="flex-shrink-0 relative w-full rounded-xl overflow-hidden w-full h-[350px] before:absolute before:inset-x-0 before:w-full before:h-full before:bg-gradient-to-t before:from-gray-900/[.7] before:z-[1]">
+                <a class="group relative block" href="{{ url('post/' . $post->id . '') }}">
+                    <div class="flex-shrink-0 relative w-full rounded-xl overflow-hidden w-full h-[350px]">
+                        <div
+                            class="before:absolute before:inset-0 before:w-full before:h-full before:bg-black before:bg-opacity-40 before:z-[1]">
+                        </div>
                         <img class="w-full h-full absolute top-0 left-0 object-cover"
-                            src="https://images.unsplash.com/photo-1611625618313-68b87aaa0626?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1064&q=80"
-                            alt="Image Description">
+                            src="data:image/jpeg;base64,{{ base64_encode($post->cover_image) }}" style="object-fit: cover;">
                     </div>
+
 
                     <div class="absolute top-0 inset-x-0 z-10">
                         <div class="p-4 flex flex-col h-full sm:p-6">
@@ -72,15 +50,14 @@
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
                                     <img class="h-[2.875rem] w-[2.875rem] border-2 border-white rounded-full"
-                                        src="https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
-                                        alt="Image Description">
+                                        src="{{ asset($post->user->avatar ?: 'avatars/default.jpg') }}" style="object-fit: cover;">
                                 </div>
                                 <div class="ml-2.5 sm:ml-4">
                                     <h4 class="font-semibold text-white">
-                                        Gloria
+                                        {{ $post->user->firstname }} {{ $post->user->lastname }}
                                     </h4>
                                     <p class="text-xs text-white/[.8]">
-                                        May 30, 2021
+                                        {{ Date::parse($post->created_at)->format('j F Y') }}
                                     </p>
                                 </div>
                             </div>
@@ -91,122 +68,57 @@
                     <div class="absolute bottom-0 inset-x-0 z-10">
                         <div class="flex flex-col h-full p-4 sm:p-6">
                             <h3 class="text-lg sm:text-3xl font-semibold text-white group-hover:text-white/[.8]">
-                                What CFR (Conversations, Feedback, Recognition) really is about
+                                {{ $post->name }}
                             </h3>
                             <p class="mt-2 text-white/[.8]">
-                                For a lot of people these days, Measure What Matters.
+                                {{ $post->title }}
                             </p>
                         </div>
                     </div>
                 </a>
-                <!-- End Card -->
-            </div>
-            <!-- End Grid -->
-        </div>
-        <!-- End Card Blog -->
-        <!-- Card Blog -->
-        <div class="max-w-[80rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-            <!-- Grid -->
-            <div class="grid lg:grid-cols-2 gap-6">
-                <!-- Card -->
-                <a class="group sm:flex" href="#">
-                    <div
-                        class="flex-shrink-0 relative rounded-xl overflow-hidden w-full h-[200px] sm:w-[250px] sm:h-[350px]">
-                        <img class="w-full h-full absolute top-0 left-0 object-cover"
-                            src="https://images.unsplash.com/photo-1664574654529-b60630f33fdb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"
-                            alt="Image Description">
-                    </div>
 
-                    <div class="grow">
-                        <div class="p-4 flex flex-col h-full sm:p-6">
-                            <div class="mb-3">
-                                <p
-                                    class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-md text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
-                                    Business
-                                </p>
+                {{-- <div class="grid lg:grid-cols-2 gap-6">
+                        <a class="group relative block" href="#">
+                            <div
+                                class="flex-shrink-0 relative w-full rounded-xl overflow-hidden w-full h-[350px] before:absolute before:inset-x-0 before:w-full before:h-full before:bg-gradient-to-t before:from-gray-900/[.7] before:z-[1]">
+                                <img class="w-full h-full absolute top-0 left-0 object-cover"
+                                    src="data:image/jpeg;base64,{{ base64_encode($post->cover_image) }}">
                             </div>
-                            <h3
-                                class="text-lg sm:text-2xl font-semibold text-gray-800 group-hover:text-blue-600 dark:text-gray-300 dark:group-hover:text-white">
-                                Preline becomes an official Instagram Marketing Partner
-                            </h3>
-                            <p class="mt-2 text-gray-600 dark:text-gray-400">
-                                Great news we're eager to share.
-                            </p>
-
-                            <div class="mt-5 sm:mt-auto">
-                                <!-- Avatar -->
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0">
-                                        <img class="h-[2.875rem] w-[2.875rem] rounded-full"
-                                            src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
-                                            alt="Image Description">
+                            <div class="absolute top-0 inset-x-0 z-10">
+                                <div class="p-4 flex flex-col h-full sm:p-6">
+                         
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0">
+                                            <img class="h-[2.875rem] w-[2.875rem] border-2 border-white rounded-full"
+                                                src="data:image/jpeg;base64,{{ base64_encode($post->user->avatar) }}">
+                                        </div>
+                                        <div class="ml-2.5 sm:ml-4">
+                                            <h4 class="font-semibold text-white">
+                                                {{ $post->user->firstname }} {{ $post->user->lastname }}
+                                            </h4>
+                                            <p class="text-xs text-white/[.8]">
+                                                {{ $post->created_at->format('M d, Y') }}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="ml-2.5 sm:ml-4">
-                                        <h4 class="font-semibold text-gray-800 dark:text-gray-200">
-                                            Aaron Larsson
-                                        </h4>
-                                        <p class="text-xs text-gray-500">
-                                            Feb 15, 2021
-                                        </p>
-                                    </div>
+                                    <!-- End Avatar -->
                                 </div>
-                                <!-- End Avatar -->
                             </div>
-                        </div>
-                    </div>
-                </a>
-                <!-- End Card -->
 
-                <!-- Card -->
-                <a class="group sm:flex" href="#">
-                    <div
-                        class="flex-shrink-0 relative rounded-xl overflow-hidden w-full h-[200px] sm:w-[250px] sm:h-[350px]">
-                        <img class="w-full h-full absolute top-0 left-0 object-cover"
-                            src="https://images.unsplash.com/photo-1669824774762-65ddf29bee56?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"
-                            alt="Image Description">
-                    </div>
-                    <div class="grow">
-                        <div class="p-4 flex flex-col h-full sm:p-6">
-                            <div class="mb-3">
-                                <p
-                                    class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-md text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
-                                    Announcements
-                                </p>
-                            </div>
-                            <h3
-                                class="text-lg sm:text-2xl font-semibold text-gray-800 group-hover:text-blue-600 dark:text-gray-300 dark:group-hover:text-white">
-                                Announcing a free plan for small teams
-                            </h3>
-                            <p class="mt-2 text-gray-600 dark:text-gray-400">
-                                At Wake, our mission has always been focused on bringing openness.
-                            </p>
-
-                            <div class="mt-5 sm:mt-auto">
-                                <!-- Avatar -->
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0">
-                                        <img class="h-[2.875rem] w-[2.875rem] rounded-full"
-                                            src="https://images.unsplash.com/photo-1669720229052-89cda125fc3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
-                                            alt="Image Description">
-                                    </div>
-                                    <div class="ml-2.5 sm:ml-4">
-                                        <h4 class="font-semibold text-gray-800 dark:text-gray-200">
-                                            Hanna Wolfe
-                                        </h4>
-                                        <p class="text-xs text-gray-500">
-                                            Feb 4, 2021
-                                        </p>
-                                    </div>
+                            <div class="absolute bottom-0 inset-x-0 z-10">
+                                <div class="flex flex-col h-full p-4 sm:p-6">
+                                    <h3 class="text-lg sm:text-3xl font-semibold text-white group-hover:text-white/[.8]">
+                                        {{ $post->name }}
+                                    </h3>
+                                    <p class="mt-2 text-white/[.8]">
+                                        {{ $post->title }}
+                                    </p>
                                 </div>
-                                <!-- End Avatar -->
                             </div>
-                        </div>
-                    </div>
-                </a>
-                <!-- End Card -->
-            </div>
-            <!-- End Grid -->
+                        </a>
+                    </div> --}}
+            @endforeach
         </div>
-        <!-- End Card Blog -->
+    </div>
     </div>
 @endsection
