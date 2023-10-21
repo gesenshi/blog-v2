@@ -47,7 +47,12 @@
                 <div class="flex flex-col gap-5">
                     <div>
                         <span
-                            class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Подписчики:
+                            class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-people-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                            </svg>Подписчики:
                             {{ $followers->count() }}</span>
                     </div>
                     <div class="flex -space-x-2">
@@ -84,11 +89,10 @@
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($posts as $post)
                         <a class="group flex flex-col h-full border border-gray-200 hover:border-transparent hover:shadow-lg transition-all duration-300 rounded-xl p-5 dark:border-gray-700 dark:hover:border-transparent dark:hover:shadow-black/[.4]"
-                            href="#">
+                            href="{{ url('post/' . $post->id . '') }}">
                             <div class="aspect-w-16 aspect-h-11">
                                 <img class="w-full object-cover rounded-xl"
-                                    src="data:image/jpeg;base64,{{ base64_encode($post->cover_image) }}"
-                                    alt="Image Description">
+                                    src="data:image/jpeg;base64,{{ base64_encode($post->cover_image) }}">
                             </div>
                             <div class="my-6">
                                 <h3

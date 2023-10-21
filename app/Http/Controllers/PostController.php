@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Like;
 
 class PostController extends Controller
 {
@@ -20,11 +22,9 @@ class PostController extends Controller
 
     public function postView($id)
     {
-
         $post = Post::find($id);
 
         $posts = Post::all();
-
 
         if (!$post) {
 
@@ -35,7 +35,28 @@ class PostController extends Controller
 
         $authorPosts = Post::where('user_id', $user->id)->get();
 
-        return view('post/post', compact('post', 'authorPosts', 'user'));
+        $comments = $post->comments()
+            ->where('parent_comment_id', null) // Выбираем только родительские комментарии
+            ->orderBy('created_at', 'desc')
+            ->get();
+        // Создаем пустой массив для хранения дочерних комментариев
+        $childComments = [];
+
+        // Перебираем родительские комментарии и для каждого из них получаем дочерние комментарии
+        foreach ($comments as $parentComment) {
+            $childComment = Comment::where('parent_comment_id', $parentComment->id)
+                ->whereNotNull('parent_comment_id')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $childComments[$parentComment->id] = $childComment;
+        }
+
+        $commentsCount = Comment::where('post_id', $id)->count();
+
+        $likesCount = Like::where('post_id', $id)->count();
+
+        return view('post/post', compact('post', 'authorPosts', 'user', 'comments', 'likesCount', 'commentsCount', 'childComments'));
     }
 
 

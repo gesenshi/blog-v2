@@ -6,10 +6,10 @@
     <div class="w-full">
         <div class="max-w-[80rem] sm:px-6 lg:px-8 lg:py-0 mx-auto">
             @if (count($subscribedUsers) > 0)
-                <div class="my-4">
+                <div class="my-6">
                     <span class="block text-xl font-bold text-gray-800 dark:text-white">Ваши подписки:</span>
                 </div>
-                <div class="flex -space-x-2 my-2 mb-4">
+                <div class="flex -space-x-2 my-2 mb-6">
                     @foreach ($subscribedUsers as $user)
                         <div class="hs-tooltip inline-block">
                             <a href="{{ route('public.profile', ['id' => $user->id]) }}">

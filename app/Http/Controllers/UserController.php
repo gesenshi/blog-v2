@@ -16,7 +16,8 @@ class UserController extends Controller
 
     public function settingsView()
     {
-        $posts = Post::all();
+        $user = Auth::user();
+        $posts = Post::where('user_id', $user->id)->get();
 
         return view('user/settings', compact('posts'));
     }

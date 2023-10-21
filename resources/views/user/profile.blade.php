@@ -52,14 +52,17 @@
             </div>
         </div>
         @if (count($posts) > 0)
+            <div class="my-10">
+                <span class="block text-3xl font-bold text-gray-800 dark:text-white">Публикации</span>
+            </div>
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($posts as $post)
                     <a class="group flex flex-col h-full border border-gray-200 hover:border-transparent hover:shadow-lg transition-all duration-300 rounded-xl p-5 dark:border-gray-700 dark:hover:border-transparent dark:hover:shadow-black/[.4]"
-                        href="#">
+                        href="{{ url('post/' . $post->id . '') }}">
                         <div class="aspect-w-16 aspect-h-11">
                             <img class="w-full object-cover rounded-xl"
                                 src="data:image/jpeg;base64,{{ base64_encode($post->cover_image) }}"
-                                alt="Image Description">
+                                >
                         </div>
                         <div class="my-6">
                             <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-300 dark:group-hover:text-white">

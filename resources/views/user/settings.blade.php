@@ -5,7 +5,7 @@
 @section('content')
     <div class="max-w-[76rem] mx-auto">
         <div class="border-b border-gray-200 dark:border-gray-700">
-            <nav class="flex space-x-6 pt-4" aria-label="Tabs" role="tablist">
+            <nav class="flex space-x-6 pt-2" aria-label="Tabs" role="tablist">
                 <button type="button"
                     class="hs-tab-active:font-semibold hs-tab-active:border-blue-600 hs-tab-active:text-blue-600 py-4  inline-flex items-center gap-2 border-b-[3px] border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-blue-600 active"
                     id="tabs-with-icons-item-1" data-hs-tab="#tabs-with-icons-1" aria-controls="tabs-with-icons-1"
@@ -78,7 +78,8 @@
                                     <div class="flex items-center gap-5">
                                         <img id="preview"
                                             class="inline-block h-16 w-16 rounded-full ring-2 ring-white dark:ring-gray-800"
-                                            src="{{ asset(auth()->user()->avatar ?: 'avatars/default.jpg') }}" style="object-fit: cover;"
+                                            src="{{ asset(auth()->user()->avatar ?: 'avatars/default.jpg') }}"
+                                            style="object-fit: cover;"
                                             alt="{{ auth()->user()->firstname }} {{ auth()->user()->lastname }}">
 
                                         <div class="flex gap-x-2">
@@ -263,7 +264,7 @@
             </div>
             <div id="tabs-with-icons-2" class="hidden" role="tabpanel" aria-labelledby="tabs-with-icons-item-2">
                 <p class="text-gray-500 dark:text-gray-400">
-                <div class="mb-8 py-6">
+                <div class="mb-2 py-6">
                     <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">
                         Публикации
                     </h2>
@@ -271,7 +272,7 @@
                         Управляйте своими записями
                     </p>
                 </div>
-                <div class="flex flex-col">
+                {{-- <div class="flex flex-col">
                     <div class="-m-1.5 overflow-x-auto">
                         <div class=" min-w-full inline-block align-middle">
                             <div class="overflow-hidden">
@@ -336,8 +337,45 @@
                     This is the <em class="font-semibold text-gray-800 dark:text-gray-200">third</em> item's tab body.
                 </p>
             </div>
-        </div>
+        </div> --}}
 
-    </div>
-    <!-- End Card Section -->
-@endsection
+                <!-- Card Blog -->
+                <div class="">
+                    <!-- Grid -->
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Card -->
+                        @foreach ($posts as $post)
+                            <div
+                                class="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+                                <div class="p-4 md:p-6">
+                                    <h3
+                                        class="text-xl font-semibold text-gray-800 dark:text-gray-300 dark:hover:text-white">
+                                        {{ $post->name }}
+                                    </h3>
+                                    <p class="mt-3 text-gray-500">
+                                        {{ $post->title }}
+                                    </p>
+                                </div>
+                                <div
+                                    class="mt-auto flex border-t border-gray-200 divide-x divide-gray-200 dark:border-gray-700 dark:divide-gray-700">
+                                    <a class="w-full py-3 px-4 inline-flex justify-center items-center gap-2 rounded-bl-xl font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm sm:p-4 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
+                                        href="#">
+                                        Редактировать
+                                    </a>
+                                    <a class="w-full py-3 px-4 inline-flex justify-center items-center gap-2 rounded-br-xl font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm sm:p-4 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
+                                        href="#">
+                                        Удалить
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- End Card -->
+                        @endforeach
+
+                    </div>
+                    <!-- End Grid -->
+                </div>
+                <!-- End Card Blog -->
+
+            </div>
+            <!-- End Card Section -->
+        @endsection

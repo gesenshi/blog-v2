@@ -104,6 +104,18 @@ Route::get('/post/{id}', [\App\Http\Controllers\PostController::class, 'postView
 
 Route::post('/add-post', [\App\Http\Controllers\PostController::class, 'addPost'])->middleware(['auth', 'verified'])->name('add-post');
 
+Route::post('/like-post', [\App\Http\Controllers\LikeController::class, 'likePost'])->name('like-post');
+Route::post('/unlike-post/{id}', [\App\Http\Controllers\LikeController::class, 'unlikePost'])->name('unlike-post');
+
+Route::post('/comments', [\App\Http\Controllers\CommentController::class, 'addComment'])->name('comments.add');
+
+Route::post('/comments/reply', [\App\Http\Controllers\CommentController::class, 'replyComment'])->name('comments.reply');
+
+
+Route::get('/delete-comment/{id}', [\App\Http\Controllers\CommentController::class, 'deleteComment'])->name('comments.delete');
+
+
+
 Route::get('/logout', function () {
     Auth::logout();
     return redirect(route('/'));
