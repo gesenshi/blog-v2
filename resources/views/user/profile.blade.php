@@ -61,8 +61,7 @@
                         href="{{ url('post/' . $post->id . '') }}">
                         <div class="aspect-w-16 aspect-h-11">
                             <img class="w-full object-cover rounded-xl"
-                                src="data:image/jpeg;base64,{{ base64_encode($post->cover_image) }}"
-                                >
+                                src="data:image/jpeg;base64,{{ base64_encode($post->cover_image) }}">
                         </div>
                         <div class="my-6">
                             <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-300 dark:group-hover:text-white">
@@ -76,7 +75,16 @@
                 @endforeach
             </div>
         @else
-            {{-- <p>Нет доступных публикаций.</p> --}}
+            <div class="mt-10 flex flex-col gap-5">
+                <span class="block text-3xl font-bold text-gray-800 dark:text-white">У вас еще нет публикаций...</span>
+                <div>
+                    <a href="{{ route('create-post') }}">
+                        <button type="button"
+                            class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">
+                            Сделать первый пост
+                        </button></a>
+                </div>
+            </div>
         @endif
     </div>
 

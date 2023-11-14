@@ -96,10 +96,17 @@ Route::get('/create-post', [\App\Http\Controllers\PostController::class, 'create
     ->middleware(['auth', 'verified'])
     ->name('create-post');
 
+Route::get('/edit-post/{id}', [\App\Http\Controllers\PostController::class, 'editPost'])->name('post.edit');
+Route::get('/delete-post/{id}', [\App\Http\Controllers\PostController::class, 'deletePost'])->name('post.delete');
 
 Route::get('/post/{id}', [\App\Http\Controllers\PostController::class, 'postView'])
     ->middleware(['auth', 'verified'])
     ->name('post');
+
+Route::post('/update-post', [\App\Http\Controllers\PostController::class, 'updatePost'])
+    ->middleware(['auth', 'verified'])
+    ->name('post.update');
+
 
 
 Route::post('/add-post', [\App\Http\Controllers\PostController::class, 'addPost'])->middleware(['auth', 'verified'])->name('add-post');
@@ -113,7 +120,6 @@ Route::post('/comments/reply', [\App\Http\Controllers\CommentController::class, 
 
 
 Route::get('/delete-comment/{id}', [\App\Http\Controllers\CommentController::class, 'deleteComment'])->name('comments.delete');
-
 
 
 Route::get('/logout', function () {

@@ -7,7 +7,7 @@
         <div class="max-w-2xl lg:mb-10">
             <h2 class="text-2xl font-bold md:text-4xl md:leading-tight dark:text-white">Поиск</h2>
         </div>
-        <div class="max-w-[40rem] flex flex-col gap-6">
+        <div class="max-w-[80rem] flex flex-col gap-6">
             <form action="{{ route('search-result') }}" method="POST">
                 @csrf
                 <label for="search" class="sr-only">Label</label>
@@ -25,10 +25,20 @@
                     </div>
                 </div>
             </form>
+            <div class="flex gap-10">
+                <div class="flex-1">
+                    <div id="search-list" class="flex flex-col gap-6 mt-5">
 
-            <div id="search-list" class="flex flex-col gap-6">
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div id="post-results" class="flex flex-col gap-6 mt-5">
 
+                    </div>
+                </div>
             </div>
+
+
 
         </div>
         <div>
@@ -53,6 +63,8 @@
                             success: function(data) {
                                 $('#search-list').fadeOut(200, function() {
                                     $(this).html(data.users);
+                                    $('#post-results').html(data
+                                        .posts);
                                     $(this).fadeIn(200);
                                 });
                             }

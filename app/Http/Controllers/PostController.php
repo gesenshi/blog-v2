@@ -46,7 +46,7 @@ class PostController extends Controller
         foreach ($comments as $parentComment) {
             $childComment = Comment::where('parent_comment_id', $parentComment->id)
                 ->whereNotNull('parent_comment_id')
-                ->orderBy('created_at', 'desc')
+                ->orderBy('created_at', 'asc')
                 ->get();
 
             $childComments[$parentComment->id] = $childComment;
@@ -56,7 +56,9 @@ class PostController extends Controller
 
         $likesCount = Like::where('post_id', $id)->count();
 
-        return view('post/post', compact('post', 'authorPosts', 'user', 'comments', 'likesCount', 'commentsCount', 'childComments'));
+        $tags = explode(',', $post->tags);
+
+        return view('post/post', compact('post', 'authorPosts', 'tags', 'user', 'comments', 'likesCount', 'commentsCount', 'childComments'));
     }
 
 
@@ -68,6 +70,7 @@ class PostController extends Controller
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'cover-image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'tags' => 'required',
         ]);
 
         if ($request->hasFile('cover-image')) {
@@ -86,10 +89,66 @@ class PostController extends Controller
             'category_id' => $validatedData['category_id'],
             'cover_image' => $imageData,
             'user_id' => $userId,
+            'tags' => $validatedData['tags'],
         ]);
 
         $post->save();
 
         return redirect()->route('user.profile');
+    }
+
+    public function deletePost($id)
+    {
+        $post = Post::find($id);
+
+        if (!$post) {
+            return redirect()->back()->with('error', 'Комментарий не найден.');
+        }
+
+        if ($post->user->id != auth()->user()->id) {
+            return redirect()->back()->with('error', 'У вас нет прав для удаления этого комментария.');
+        }
+
+        $post->delete();
+
+        return url('/profile');
+    }
+
+    public function editPost($id)
+    {
+        $post = Post::find($id);
+        $categories = Category::all();
+
+        if (!$post) {
+            return redirect()->back()->with('error', 'Пост не найден.');
+        }
+
+        return view('post/edit-post', compact('post', 'categories'));
+    }
+
+    public function updatePost(Request $request)
+    {
+        $post = Post::find($request->id);
+
+        $post->name = $request->input('name');
+        $post->title = $request->input('title');
+        $post->content = $request->input('content');
+        $post->category_id = $request->input('category_id');
+
+        // Теги в формате "тег1, тег2, тег3"
+        $tags = $request->input('tags');
+
+        // Обновление тегов
+        $post->tags = $tags;
+
+        if ($request->hasFile('cover-image')) {
+            $coverImage = $request->file('cover-image');
+            $coverImageContents = file_get_contents($coverImage);
+            $post->cover_image = $coverImageContents;
+        }
+
+        $post->save();
+
+        return redirect()->route('post', ['id' => $request->id]);
     }
 }

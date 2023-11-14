@@ -1,18 +1,18 @@
 @extends('default-layout')
 
-@section('page-title', 'Создание поста')
+@section('page-title', 'Редактирование поста')
 
 @section('content')
 
     <link rel="stylesheet" href="amsify/amsify.suggestags.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="amsify/jquery.amsify.suggestags.js"></script>
+    <script src="/amsify/jquery.amsify.suggestags.js"></script>
 
     <div class="max-w-[80rem] mx-auto">
         <div class="max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
             <div class="mb-8">
                 <div class="max-w-2xl lg:mb-10">
-                    <h2 class="text-2xl font-bold md:text-4xl md:leading-tight dark:text-white">Новый пост</h2>
+                    <h2 class="text-2xl font-bold md:text-4xl md:leading-tight dark:text-white">Редактирование поста</h2>
                 </div>
             </div>
 
@@ -26,8 +26,9 @@
             {{-- 
             <textarea>Next, use our Get Started docs to setup Tiny!</textarea> --}}
 
-            <form method="POST" action="{{ route('add-post') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ url('/update-post') }}" enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="id" value="{{ $post->id }}">
                 <!-- Card -->
                 <div>
                     <div class="">
@@ -40,7 +41,7 @@
 
                             <input id="af-submit-app-project-name" type="text" name="name"
                                 class="py-2 border px-3 pr-11 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
-                                placeholder="Введите название поста">
+                                placeholder="Введите название поста" value="{{ $post->name }}">
                         </div>
                         <div class="space-y-2 mb-4">
                             <label for="af-submit-app-project-name"
@@ -50,10 +51,11 @@
 
                             <input id="af-submit-app-project-name" type="text" name="title"
                                 class="py-2 border px-3 pr-11 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
-                                placeholder="Придумайте краткое описание поста">
+                                placeholder="Придумайте краткое описание поста" value="{{ $post->title }}">
                         </div>
 
-                        <div class="space-y-2 mb-4">
+                        <div class="space-y-2
+                                mb-4">
                             <label for="af-submit-app-description"
                                 class="inline-block text-sm font-medium text-gray-800 mt-2.5 dark:text-gray-200">
                                 Содержание
@@ -61,7 +63,7 @@
 
                             <textarea id="af-submit-app-description" name="content"
                                 class="py-2 px-3 border block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
-                                rows="6" placeholder="Поделитесь чем-нибудь..."></textarea>
+                                rows="6" placeholder="Поделитесь чем-нибудь...">{{ $post->content }}</textarea>
                         </div>
 
                         <div class="space-y-2 mb-4">
@@ -89,32 +91,31 @@
                                 </span> --}}
                             </label>
                             <div>
-                                <img id="image-preview" src="" alt="" class="block mt-10 rounded-lg">
+                                <img id="image-preview" class="block mt-10 w-full object-cover rounded-xl"
+                                    src="data:image/jpeg;base64,{{ base64_encode($post->cover_image) }}">
                             </div>
+
+                            <script>
+                                const fileInput = document.getElementById('cover-image');
+                                const imagePreview = document.getElementById('image-preview');
+
+                                fileInput.addEventListener('change', function() {
+                                    const file = fileInput.files[0];
+
+                                    if (file) {
+                                        const reader = new FileReader();
+
+                                        reader.onload = function(e) {
+                                            imagePreview.src = e.target.result;
+                                        };
+
+                                        reader.readAsDataURL(file);
+                                    } else {
+                                        imagePreview.src = "data:image/jpeg;base64,{{ base64_encode($post->cover_image) }}";
+                                    }
+                                });
+                            </script>
                         </div>
-
-                        <script>
-                            const fileInput = document.getElementById('cover-image');
-                            const imagePreview = document.getElementById('image-preview');
-
-                            fileInput.addEventListener('change', function() {
-                                const file = fileInput.files[0]; 
-
-                                if (file) {
-                                    const reader = new FileReader();
-
-                                    reader.onload = function(e) {
-                                        imagePreview.src = e.target.result;
-                                    };
-
-                                    reader.readAsDataURL(file);
-                                } else {
-                                    imagePreview.src = '';
-                                }
-                            });
-                        </script>
-
-
                         <div class="space-y-2 mb-4">
                             <label for="af-submit-app-category"
                                 class="inline-block text-sm font-medium text-gray-800 mt-2.5 dark:text-gray-200">
@@ -124,13 +125,18 @@
                                 class="py-2 border px-3 pr-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400">
                                 <option value="" selected>Выберите категорию</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}"
+                                        {{ $category->id == $post->category_id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
                                 @endforeach
                             </select>
+
                         </div>
                         <div class="space-y-2 mb-4">
                             <input type="text" name="tags"
-                                class="py-2 border px-3 pr-11 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400">
+                                class="py-2 border px-3 pr-11 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                                value="{{ $post->tags }}">
                             <script>
                                 $('input[name="tags"]').amsifySuggestags({
                                     tagLimit: 5,
@@ -138,6 +144,7 @@
                                 });
                             </script>
                         </div>
+
                     </div>
                     <!-- End Grid -->
                     @foreach ($errors->all() as $error)
@@ -162,9 +169,15 @@
                         </div>
                     @endforeach
                     <div class="mt-5 flex justify-end gap-x-2">
+                        <a href="{{ url('delete-post/' . $post->id) }}">
+                            <button type="button"
+                                class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">
+                                Удалить пост
+                            </button>
+                        </a>
                         <button type="submit"
                             class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">
-                            Опубликовать
+                            Сохранить
                         </button>
                     </div>
                 </div>
@@ -172,4 +185,6 @@
         <!-- End Card -->
         </form>
     </div>
+    </div>
+    <!-- End Card Section -->
 @endsection
